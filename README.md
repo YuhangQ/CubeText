@@ -3,7 +3,7 @@
 
 ## 项目预览
 
-![](https://kod.yuhangq.me/index.php?user/publicLink&fid=fd7druNsuf9RICdL2C-_Q6q0e0GiHPc1oSORoG0cOuqeA2FwVfDHKGA97XmT0gd_gqZr7EQP6foCMwjpf246-7yvTTNOoqV6xbOFCjSMJL0MUpgUCypt-pGcWbYq1bL0ppmk7G8ihJF3rIfv9TRQJLMi&file_name=/cubetext_demo.png)
+![](https://s2.ax1x.com/2019/08/08/e7MMut.png)
 
 ## 运行此项目源码
 
