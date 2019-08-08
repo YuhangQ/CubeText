@@ -1,0 +1,89 @@
+html,body {
+    margin: 0px;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+#container {
+    display: flex;
+    height: calc(100vh - 20px);
+    width: 100vw;
+}
+#linex {
+    height: 1px;
+    width: 100vw;
+    background-color: #3b3b3b;
+}
+#liney {
+    width: 1px;
+    height: calc(50vh - 20px);
+    float: left;
+    background-color: #3b3b3b;
+}
+#input {
+    height: calc(50vh - 20px);
+    width: calc(50vw - 1px);
+    float: left;
+}
+#output {
+    height: calc(50vh - 20px);
+    width: 50vw;
+    float: left;
+}
+#bottom {
+    user-select: none;
+    color: white;
+    background-color:  #0063a6;
+    font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+    width: 100vw;
+    height: 20px;
+    float: left;
+}
+#line-info {
+    text-align: center;
+    height: 100%;
+    width: 100px;
+    float: right;
+    line-height: 20px;
+    font-size: 12px;
+}
+#run-icon {
+    width: 20px;
+    height: 20px;
+    float: left;
+}
+#run-info {
+    text-align: left;
+    height: 100%;
+    width: 120px;
+    float: left;
+    line-height: 20px;
+    font-size: 12px;
+}
+
+#encoding {
+    text-align: center;
+    height: 100%;
+    width: 50px;
+    float: right;
+    line-height: 20px;
+    font-size: 12px;
+}
+
+#lang {
+    text-align: center;
+    height: 100%;
+    width: 50px;
+    float: right;
+    line-height: 20px;
+    font-size: 12px;
+}
+
+#kill {
+    text-align: center;
+    height: 100%;
+    width: 50px;
+    float: left;
+    line-height: 20px;
+    font-size: 12px;
+}

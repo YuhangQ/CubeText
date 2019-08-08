@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="../node_modules/dragula/dist/dragula.css">
+    <link rel="stylesheet" href="../styles/electron-tabs.css">
+    <link rel="stylesheet" href="../styles/mytab.css">
+    <link rel="stylesheet" href="../styles/tree.css">
+
+    <link rel="stylesheet" href="../styles/styles.css">
+
+
+    <title>CubeText</title>
+    <style type="text/css">
+        #left {
+            width: 200px;
+            float: left;
+            background-color: white;
+            height: calc(100vh - 20px);
+        }
+
+        #line {
+            height: 1px;
+            width: 100vw;
+            background-color: #3b3b3b;
+        }
+
+        .etabs-views {
+            width: calc(100vw - 200px);
+            height: calc(100vh - 32px - 20px);
+        }
+
+        #end {
+            background-color: #127cc9;
+            height: 20px;
+            width: 100vw;
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="left">
+        <div id="tree">
+            <div class="item folder active open">
+                <span class="indicator">
+                    <img src="../styles/tree-indicator.svg">
+                </span>
+                <a href="https://down.yuhangq.me/">
+                    <span class="icon"><img src="../styles/folder.svg"></span>
+                    <span class="label">down.yuhangq.me</span>
+                </a>
+                <div class="content">
+                    <div class="item folder unknown">
+                        <span class="indicator">
+                            <img src="../styles/tree-indicator.svg">
+                        </span>
+                        <a href="https://down.yuhangq.me/iso/">
+                            <span class="icon"><img src="../styles/folder.svg"></span>
+                            <span class="label">iso</span>
+                        </a>
+                    </div>
+                    <div class="item folder none">
+                        <span class="indicator">
+                            <img src="../styles/tree-indicator.svg">
+                        </span>
+                        <a href="https://down.yuhangq.me/pictures/">
+                            <span class="icon"><img src="../styles/folder.svg"></span>
+                            <span class="label">pictures</span>
+                        </a>
+                    </div>
+                    <div class="item folder unknown">
+                        <span class="indicator">
+                            <img src="../styles/tree-indicator.svg">
+                        </span>
+                        <a href="https://down.yuhangq.me/roms/">
+                            <span class="icon"><img src="../styles/folder.svg"></span>
+                            <span class="label">roms</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="etabs-tabgroup">
+        <div class="etabs-tabs"></div>
+        <div class="etabs-buttons"></div>
+    </div>
+    <div class="etabs-views" style="float: right"></div>
+
+    <div id="end"></div>
+    <!-- 调用页面控制器 -->
+    <script>require('../app/controllers/index.js');</script>
+</body>
+
+</html>

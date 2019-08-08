@@ -1,0 +1,36 @@
+.tab-container {
+    height: 30px;
+    background-color: #252526;
+}
+.tab {
+    background-color: #2d2d2d;
+    width: 15vw;
+    height: 100vh;
+}
+.console {
+    background-color: white;
+    height: 40vh;
+}
+
+.xterm {
+    bottom: 10px;
+}
+
+body {
+    padding: 0px;
+    margin: 0;
+    background-color: #1e1e1e
+}
+
+#editor {
+    left: 100px;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+}
+
+#title {
+    height: 20px;
+    -webkit-app-region:drag;
+    background-color: #333333;
+}

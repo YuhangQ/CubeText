@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../styles/vscode.css"/>
+</head>
+
+<body style="background-color: #1e1e1e">
+    <div id="container"></div>
+    
+    <div id="linex"></div>
+
+    <div id="input" hidden></div>
+    <div id="liney" hidden></div>
+    <div id="output" hidden></div>
+    
+    <div id="bottom">
+        <div id="run-icon">
+                <embed id="svg-icon" src="../styles/hourglass.svg" style="position:absolute;width : 12px; height:12px; bottom:3px; left: 3px" type="image/svg+xml" />
+        </div>
+        <div id="run-info">等待运行...</div>
+        <div id="kill" hidden>杀死</div>
+        <div id="lang">C++</div>
+        <div id="encoding">UTF-8</div>
+        <div id="line-info">行 1, 列 1</div>
+    </div>
+
+    <script>document.body.setAttribute("style", "overflow:hidden")</script>
+    <script>var nodeRequire = global.require;</script>
+    <script src="../node_modules/monaco-editor/min/vs/loader.js"></script>
+    <script>
+        var amdRequire = global.require;
+        global.require = nodeRequire;
+        var path = require('path');
+        function uriFromPath(_path) {
+            var pathName = path.resolve(_path).replace(/\\/g, '/');
+            if (pathName.length > 0 && pathName.charAt(0) !== '/') {
+                pathName = '/' + pathName;
+            }
+            return encodeURI('file://' + pathName);
+        }
+        amdRequire.config({
+            baseUrl: uriFromPath(path.join(__dirname, '../node_modules/monaco-editor/min'))
+        });
+        self.module = undefined;
+        self.process.browser = true;
+    </script>
+    <script>require('../app/controllers/vscode.js');</script>
+</body>
+
+</html>
