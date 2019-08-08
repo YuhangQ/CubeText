@@ -1,0 +1,2 @@
+# CubeText
+OI神器
