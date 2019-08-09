@@ -110,7 +110,10 @@ function createMenu() {
                 { label: "关于 CubeText", role: "about" },
                 { type: "separator" },
                 { label: "设置", submenu: [
-                    { label: "设置面板" },
+                    {
+                        label: "设置",
+                        click() { mainWindow.webContents.send("action", "settings"); }
+                    },
                     { type: "separator" },
                     {
                         label: "增大字体",

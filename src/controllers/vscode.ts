@@ -183,3 +183,9 @@ ipcRenderer.on("ifkill", (event, time)=>{
         kill.hidden = true;
     }
 })
+
+ipcRenderer.on("font-size", (event, size)=> {
+    editor.updateOptions({fontSize: size});
+    input.updateOptions({fontSize: size});
+    output.updateOptions({fontSize: size});
+});

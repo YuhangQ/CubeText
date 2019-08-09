@@ -3,6 +3,7 @@ import { TabManager } from "./TabManager";
 import { remote } from "electron";
 import { Utils } from "./Utils";
 import { MyTab } from "./TabManager";
+import { Config } from "./Config";
 
 class FileHandler {
     static newFile() {
@@ -35,9 +36,7 @@ class FileHandler {
     }
 
     static saveFile(tab: MyTab) {
-        if(tab.isUntitled()) {
-            return;
-        }
+        if(tab.isUntitled()) return;
         let webview = tab.getWebView();
         webview.addEventListener("ipc-message", (event)=>{
             if(event.channel != "content") return;

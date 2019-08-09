@@ -31,5 +31,6 @@ ipcRenderer.on("action", (event, arg) => {
         case "font-larger": TabManager.getCurrentTab().getWebView().send("font-larger"); break;
         case "font-smaller": TabManager.getCurrentTab().getWebView().send("font-smaller"); break;
         case "devtools": ipcRenderer.send("devtools"); break;
+        case "settings": TabManager.addTab(Config.config);
     }
 });

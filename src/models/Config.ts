@@ -3,6 +3,8 @@ import { FileHandler } from "../models/FileHandler";
 import { Utils } from "../models/Utils";
 import * as path from "path";
 import * as fs from "fs";
+import { ENGINE_METHOD_STORE } from "constants";
+import { TabManager } from "./TabManager";
 
 class Config {
     static dataDir: string;
@@ -10,6 +12,7 @@ class Config {
     static cacheDir: string;
     static compile: string;
     static compileRun: string;
+    static config: string;
     static init() {
         this.dataDir = path.join(ipcRenderer.sendSync('datapath'), "cubetext");
         this.scriptsDir = path.join(this.dataDir, "scripts");
@@ -19,6 +22,7 @@ class Config {
         this.mkdirIfnotExsit(this.scriptsDir);
         this.mkdirIfnotExsit(this.cacheDir);
         
+        this.config = path.join(this.dataDir, "config.json");
         this.compile = path.join(this.scriptsDir, "compile" + (Utils.isWindows() ? ".bat" : ".sh"));
         this.compileRun = path.join(this.scriptsDir, "compile_run"+ (Utils.isWindows() ? ".bat" : ".sh"));
 
@@ -28,6 +32,18 @@ class Config {
         if(!fs.existsSync(this.compileRun)) {
             fs.copyFileSync(__dirname + "/../../scripts/compile_run" + (Utils.isWindows() ? ".bat" : ".sh"), this.compileRun);
         }
+        if(!fs.existsSync(this.config)) {
+            fs.copyFileSync(__dirname + "/../../scripts/config.json", this.config);
+        }
+    }
+    static reload() {
+        let conf = JSON.parse(FileHandler.readText(this.config));
+
+        // 字体大小设置
+        let fontSize = conf["font-size"];
+        TabManager.setFontSize(fontSize);
+
+
     }
     static mkdirIfnotExsit(path: string) {
         if(fs.existsSync(path)) return;

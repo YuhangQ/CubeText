@@ -5,6 +5,8 @@ import { FileHandler } from "./FileHandler";
 import { WebviewTag, dialog, remote } from "electron";
 import { Console } from "./Console";
 import * as path from "path";
+import { ENGINE_METHOD_STORE } from "constants";
+import { Config } from "./Config";
 
 class MyTab {
     private file: string;
@@ -118,11 +120,14 @@ class MyTab {
                     TabManager.remove(this);
                 }
             });
-        } else {
-            FileHandler.autoSaveFunc();
-            this.tab.close();
-            TabManager.remove(this);
+            return;
         }
+        FileHandler.autoSaveFunc();
+        if(this.getFilePath() == Config.config) {
+            Config.reload();
+        }
+        this.tab.close();
+        TabManager.remove(this);
     }
     public isUntitled() {
         return this.file == "Untitled";
@@ -158,6 +163,12 @@ class TabManager {
             res.push(this.tabs[key]);
         }
         return res;
+    }
+    static setFontSize(size: number) {
+        let tabs = this.getTabs();
+        for(let tab of tabs) {
+            tab.getWebView().send("font-size", size);
+        }
     }
     static remove(tab: MyTab) {
         delete this.tabs[tab.getID()];
