@@ -25,8 +25,6 @@ class FileHandler {
         if(!tab.isUntitled()) return;
         const file = remote.dialog.showSaveDialog( {
             filters: [
-                { name: "C/C++ Files", extensions: ['cpp', 'c'] },
-                { name: "Text Files", extensions: ['in', 'out', 'ans', 'txt'] },
                 { name: 'All Files', extensions: ['*'] }],
         });
         tab.setFilePath(file);
@@ -51,8 +49,6 @@ class FileHandler {
     static openFile() {
         const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
             filters: [
-                { name: "C/C++ Files", extensions: ['cpp', 'c'] },
-                { name: "Text Files", extensions: ['in', 'out', 'ans', 'txt'] },
                 { name: 'All Files', extensions: ['*'] }],
             properties: ['openFile']
         });

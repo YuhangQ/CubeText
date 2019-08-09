@@ -4,6 +4,7 @@ import { Utils } from "./Utils";
 import { FileHandler } from "./FileHandler";
 import { WebviewTag, dialog, remote } from "electron";
 import { Console } from "./Console";
+import * as path from "path";
 import { V4MAPPED } from "dns";
 
 class MyTab {
@@ -12,9 +13,43 @@ class MyTab {
     private tab: TabGroup.Tab;
     private webview: WebviewTag;
     public runing: boolean = false;
+    public fileType: string;
+    public fileTypeName: string;
     private pty;
     constructor(file: string) {
+
         this.file = file;
+
+        switch(path.extname(this.file)) {
+            // C
+            case ".c": this.fileTypeName = "C"; this.fileType = "c"; break;
+            case ".h": this.fileTypeName = "C++"; this.fileType = "cpp"; break;
+            // C++
+            case ".cpp": this.fileTypeName = "C++"; this.fileType = "cpp"; break;
+            case ".cc": this.fileTypeName = "C++"; this.fileType = "cpp"; break;
+            // bat
+            case ".cmd": this.fileTypeName = "Batch"; this.fileType = "bat"; break;
+            case ".bat": this.fileTypeName = "Batch"; this.fileType = "bat"; break;
+            // web
+            case ".css": this.fileTypeName = "CSS"; this.fileType = "css"; break;
+            case ".html": this.fileTypeName = "HTML"; this.fileType = "html"; break;
+            case ".js": this.fileTypeName = "JavaScript"; this.fileType = "javascript"; break;
+            // Golang
+            case ".go": this.fileTypeName = "Go"; this.fileType = "go"; break;
+            // Python
+            case ".py": this.fileTypeName = "Python"; this.fileType = "python"; break;
+            case ".json": this.fileTypeName = "JSON"; this.fileType = "json"; break;
+            case ".java": this.fileTypeName = "Java"; this.fileType = "java"; break;
+            case ".markdown": this.fileTypeName = "Markdown"; this.fileType = "markdown"; break;
+            case ".php": this.fileTypeName = "PHP"; this.fileType = "php"; break;
+            case ".ts": this.fileTypeName = "TypeScript"; this.fileType = "typescript"; break;
+            case ".sh": this.fileTypeName = "Shell"; this.fileType = "shell"; break;
+            case ".yml": this.fileTypeName = "YAML"; this.fileType = "yaml"; break;
+            case ".yaml": this.fileTypeName = "YAML"; this.fileType = "yaml"; break;
+            case ".xml": this.fileTypeName = "XML"; this.fileType = "xml"; break;
+            default: this.fileTypeName = "Plain"; this.fileType = "plaintext";
+        }
+
         this.tab = TabManager.tabGroup.addTab({
             title: Utils.getFileNameByPath(this.file),
             src: `file://${__dirname}/../../views/vscode.html`,
@@ -42,7 +77,7 @@ class MyTab {
                 let content: string;
                 if(this.file != "Untitled") content = FileHandler.readText(this.file);
                 else content = "";
-                this.webview.send("set", content);
+                this.webview.send("set", content, this.fileType, this.fileTypeName);
             }
             if(event.channel == "cprun") {
                 if(!this.runing) this.pty = Console.cprun(this, event.args[0]);
@@ -61,6 +96,7 @@ class MyTab {
                 this.saved = false;
             }
         });
+
     }
     public getID() {
         return this.tab.id;

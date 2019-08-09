@@ -15,14 +15,14 @@ amdRequire(['vs/editor/editor.main'], () => {
 /**
  * 初始化文本
  */
-ipcRenderer.on("set", (event, content) => {
+ipcRenderer.on("set", (event, content, lang, langName) => {
     editor = monaco.editor.create(document.getElementById('container'), {
         value: content,
-        language: 'cpp',
+        language: lang,
         automaticLayout: true,
         theme: "vs-dark",
-        
     });
+    document.getElementById("lang").innerText = langName;
     editor.onDidChangeCursorPosition((e)=>{
         document.getElementById("line-info").innerText = "行 " + e.position.lineNumber + ", 列 " + e.position.column;
     });

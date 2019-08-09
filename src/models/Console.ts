@@ -36,6 +36,10 @@ class Console {
         this.isShow = false;
     }
     static compile(tab: MyTab) {
+        if(tab.fileType != "cpp") {
+            alert("暂不支持非 C++ 程序编译");
+            return;
+        }
         if(tab.runing) return;
         tab.runing = true;
         FileHandler.autoSaveFunc();
@@ -69,6 +73,10 @@ class Console {
         });
     }
     static cprun(tab: MyTab, input: string) {
+        if(tab.fileType != "cpp") {
+            alert("暂不支持非 C++ 程序编译运行");
+            return;
+        }
         if(tab.runing) return;
         if(tab.isUntitled()) {
             alert("请先保存此文件。");
