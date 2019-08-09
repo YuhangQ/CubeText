@@ -22,9 +22,9 @@ ipcRenderer.on("set", (event, content, lang, langName) => {
         automaticLayout: true,
         theme: "vs-dark",
     });
-    document.getElementById("lang").innerText = langName;
+    document.getElementById("lang").innerHTML = "&nbsp;" + langName + "&nbsp;";
     editor.onDidChangeCursorPosition((e)=>{
-        document.getElementById("line-info").innerText = "行 " + e.position.lineNumber + ", 列 " + e.position.column;
+        document.getElementById("line-info").innerHTML = "&nbsp;" + "行 " + e.position.lineNumber + ", 列 " + e.position.column + "&nbsp;";
     });
     editor.onDidChangeModelContent(()=>{
         ipcRenderer.sendToHost("text-change");
@@ -61,6 +61,13 @@ document.getElementById("lang").onmouseenter = () => {
 };
 document.getElementById("lang").onmouseleave = () => {
     document.getElementById("lang").style.backgroundColor = "#0063a6"
+};
+
+document.getElementById("line-info").onmouseenter = () => {
+    document.getElementById("line-info").style.backgroundColor = "#177ec4"
+};
+document.getElementById("line-info").onmouseleave = () => {
+    document.getElementById("line-info").style.backgroundColor = "#0063a6"
 };
 
 document.getElementById("encoding").onmouseenter = () => {

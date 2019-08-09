@@ -5,7 +5,6 @@ import { FileHandler } from "./FileHandler";
 import { WebviewTag, dialog, remote } from "electron";
 import { Console } from "./Console";
 import * as path from "path";
-import { V4MAPPED } from "dns";
 
 class MyTab {
     private file: string;

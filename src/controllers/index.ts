@@ -1,10 +1,9 @@
 import { TabManager } from "../models/TabManager";
-import { ipcRenderer, ipcMain } from 'electron';
+import { ipcRenderer } from 'electron';
 import { FileHandler } from "../models/FileHandler";
 import { Console } from "../models/Console";
 import { Config } from "../models/Config";
 import { Utils } from "../models/Utils";
-
 
 TabManager.init();
 Config.init();
@@ -12,6 +11,12 @@ Utils.init();
 TabManager.addTab("/Users/YuhangQ/Desktop/demo.cpp");
 
 FileHandler.autoSave();
+
+document.getElementById('drag').ondragstart = (event) => {
+    event.preventDefault()
+    ipcRenderer.send('ondragstart', '/path/to/item')
+}
+
 
 ipcRenderer.on("action", (event, arg) => {
     switch (arg) {

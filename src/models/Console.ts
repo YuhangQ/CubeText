@@ -1,11 +1,9 @@
 import { TabManager, MyTab } from "./TabManager";
-import * as os from "os";
 import * as pty from "node-pty";
 import { FileHandler } from "./FileHandler";
 import { app, ipcRenderer } from "electron";
 import { Utils } from "./Utils";
 import { Config } from "./Config";
-import { fstat } from "fs";
 import * as path from "path";
 class Console {
     private static isShow = false;

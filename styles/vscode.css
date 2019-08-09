@@ -42,7 +42,6 @@ html,body {
 #line-info {
     text-align: center;
     height: 100%;
-    width: 100px;
     float: right;
     line-height: 20px;
     font-size: 12px;
@@ -73,7 +72,6 @@ html,body {
 #lang {
     text-align: center;
     height: 100%;
-    width: 50px;
     float: right;
     line-height: 20px;
     font-size: 12px;
