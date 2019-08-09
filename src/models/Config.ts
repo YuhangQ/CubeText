@@ -13,6 +13,7 @@ class Config {
     static compile: string;
     static compileRun: string;
     static config: string;
+    static conf: string;
     static init() {
         this.dataDir = path.join(ipcRenderer.sendSync('datapath'), "cubetext");
         this.scriptsDir = path.join(this.dataDir, "scripts");
@@ -35,15 +36,24 @@ class Config {
         if(!fs.existsSync(this.config)) {
             fs.copyFileSync(__dirname + "/../../scripts/config.json", this.config);
         }
+
+        Config.reload();
     }
     static reload() {
-        let conf = JSON.parse(FileHandler.readText(this.config));
-
-        // 字体大小设置
-        let fontSize = conf["font-size"];
-        TabManager.setFontSize(fontSize);
-
-
+        this.conf = JSON.parse(FileHandler.readText(this.config));
+        console.log(this.conf);
+        TabManager.setFontSize(this.getFontSize());
+    }
+    static getFontSize(): number {
+        return this.conf["font-size"];
+    }
+    static setFontSize(size: number) {
+        this.conf["font-size"] = size;
+        console.log(size);
+        this.save();
+    }
+    static save() {
+        FileHandler.saveText(Config.config, this.conf.toString());
     }
     static mkdirIfnotExsit(path: string) {
         if(fs.existsSync(path)) return;

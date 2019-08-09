@@ -2,6 +2,7 @@
 import { remote, ipcRenderer } from "electron";
 import { Console } from "../models/Console";
 import { SSL_OP_CRYPTOPRO_TLSEXT_BUG } from "constants";
+import { Config } from "../models/Config";
 
 declare var amdRequire;
 var editor: monaco.editor.IStandaloneCodeEditor;
@@ -53,6 +54,9 @@ ipcRenderer.on("set", (event, content, lang, langName) => {
         selectionHighlight: false,
         readOnly: true
     });
+    editor.updateOptions({fontSize: Config.getFontSize()});
+    input.updateOptions({fontSize: Config.getFontSize()});
+    output.updateOptions({fontSize: Config.getFontSize()});
 });
 
 
@@ -131,26 +135,18 @@ ipcRenderer.on("show", (event)=>{
     document.getElementById("container").style.height = "50vh";
 });
 ipcRenderer.on("font-larger", (event)=>{
-    editor.updateOptions({
-        fontSize: editor.getConfiguration().fontInfo.fontSize + 1
-    });
-    input.updateOptions({
-        fontSize: editor.getConfiguration().fontInfo.fontSize + 1
-    });
-    output.updateOptions({
-        fontSize: editor.getConfiguration().fontInfo.fontSize + 1
-    });
+    let size = editor.getConfiguration().fontInfo.fontSize + 1;
+    editor.updateOptions({fontSize: size});
+    input.updateOptions({fontSize: size});
+    output.updateOptions({fontSize: size});
+    Config.setFontSize(size);
 });
 ipcRenderer.on("font-smaller", (event)=>{
-    editor.updateOptions({
-        fontSize: editor.getConfiguration().fontInfo.fontSize - 1
-    });
-    input.updateOptions({
-        fontSize: editor.getConfiguration().fontInfo.fontSize - 1
-    });
-    output.updateOptions({
-        fontSize: editor.getConfiguration().fontInfo.fontSize - 1
-    });
+    let size = editor.getConfiguration().fontInfo.fontSize - 1;
+    editor.updateOptions({fontSize: size});
+    input.updateOptions({fontSize: size});
+    output.updateOptions({fontSize: size});
+    Config.setFontSize(size);
 });
 let icon = document.getElementById("svg-icon");
 let text = document.getElementById("run-info");
