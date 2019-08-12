@@ -71,14 +71,14 @@ class MyTab {
         this.webview.setAttribute("nodeintegration", null);
         // 开启 editor 的开发者工具
         this.webview.addEventListener("dom-ready", () => {
-            this.webview.openDevTools();
+            //this.webview.openDevTools();
         });
         this.webview.addEventListener("ipc-message", (event) => {
             if(event.channel == "editor-loading") {
                 let content: string;
                 if(this.file != "Untitled") content = FileHandler.readText(this.file);
                 else content = "";
-                this.webview.send("set", content, this.fileType, this.fileTypeName);
+                this.webview.send("set", content, this.fileType, this.fileTypeName, Config.getFontSize());
             }
             if(event.channel == "cprun") {
                 if(!this.runing) this.pty = Console.cprun(this, event.args[0]);
@@ -176,14 +176,6 @@ class TabManager {
     static getCurrentTab() {
         let id = this.tabGroup.getActiveTab().id;
         return this.tabs[id];
-    }
-    static addSetting() {
-        TabManager.tabGroup.addTab({
-            title: "编辑器设置",
-            src: `file://${__dirname}/../../views/setting.html`,
-            visible: true,
-            active: true
-        });
     }
     static init() {
         // 创建 tab 组并加入拖动功能

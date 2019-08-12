@@ -16,7 +16,7 @@ amdRequire(['vs/editor/editor.main'], () => {
 /**
  * 初始化文本
  */
-ipcRenderer.on("set", (event, content, lang, langName) => {
+ipcRenderer.on("set", (event, content, lang, langName, fontSize) => {
     editor = monaco.editor.create(document.getElementById('container'), {
         value: content,
         language: lang,
@@ -54,9 +54,9 @@ ipcRenderer.on("set", (event, content, lang, langName) => {
         selectionHighlight: false,
         readOnly: true
     });
-    editor.updateOptions({fontSize: Config.getFontSize()});
-    input.updateOptions({fontSize: Config.getFontSize()});
-    output.updateOptions({fontSize: Config.getFontSize()});
+    editor.updateOptions({fontSize: fontSize});
+    input.updateOptions({fontSize: fontSize});
+    output.updateOptions({fontSize: fontSize});
 });
 
 
@@ -139,14 +139,12 @@ ipcRenderer.on("font-larger", (event)=>{
     editor.updateOptions({fontSize: size});
     input.updateOptions({fontSize: size});
     output.updateOptions({fontSize: size});
-    Config.setFontSize(size);
 });
 ipcRenderer.on("font-smaller", (event)=>{
     let size = editor.getConfiguration().fontInfo.fontSize - 1;
     editor.updateOptions({fontSize: size});
     input.updateOptions({fontSize: size});
     output.updateOptions({fontSize: size});
-    Config.setFontSize(size);
 });
 let icon = document.getElementById("svg-icon");
 let text = document.getElementById("run-info");

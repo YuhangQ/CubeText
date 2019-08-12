@@ -13,7 +13,7 @@ class Config {
     static compile: string;
     static compileRun: string;
     static config: string;
-    static conf: string;
+    static conf: any;
     static init() {
         this.dataDir = path.join(ipcRenderer.sendSync('datapath'), "cubetext");
         this.scriptsDir = path.join(this.dataDir, "scripts");
@@ -40,20 +40,18 @@ class Config {
         Config.reload();
     }
     static reload() {
-        this.conf = JSON.parse(FileHandler.readText(this.config));
-        console.log(this.conf);
-        TabManager.setFontSize(this.getFontSize());
+        let contents = FileHandler.readText(Config.config);
+        this.conf = JSON.parse(contents);
     }
     static getFontSize(): number {
-        return this.conf["font-size"];
+        return this.conf.fontSize;
     }
     static setFontSize(size: number) {
-        this.conf["font-size"] = size;
-        console.log(size);
+        this.conf.fontSize = size;
         this.save();
     }
     static save() {
-        FileHandler.saveText(Config.config, this.conf.toString());
+        FileHandler.saveText(Config.config, JSON.stringify(this.conf, null, 4));
     }
     static mkdirIfnotExsit(path: string) {
         if(fs.existsSync(path)) return;

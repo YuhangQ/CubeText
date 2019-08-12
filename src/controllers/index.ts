@@ -5,8 +5,8 @@ import { Console } from "../models/Console";
 import { Config } from "../models/Config";
 import { Utils } from "../models/Utils";
 
-TabManager.init();
 Config.init();
+TabManager.init();
 Utils.init();
 TabManager.addTab("/Users/YuhangQ/Desktop/demo.cpp");
 
@@ -28,8 +28,8 @@ ipcRenderer.on("action", (event, arg) => {
         case "closetag": TabManager.getCurrentTab().close(); break;
         case "compile": Console.compile(TabManager.getCurrentTab()); break;
         case "cprun": TabManager.getCurrentTab().getWebView().send("cprun"); break;
-        case "font-larger": TabManager.getCurrentTab().getWebView().send("font-larger"); break;
-        case "font-smaller": TabManager.getCurrentTab().getWebView().send("font-smaller"); break;
+        case "font-larger": TabManager.getCurrentTab().getWebView().send("font-larger"); Config.setFontSize(Config.getFontSize() + 1); break;
+        case "font-smaller": TabManager.getCurrentTab().getWebView().send("font-smaller"); Config.setFontSize(Config.getFontSize() - 1); break;
         case "devtools": ipcRenderer.send("devtools"); break;
         case "settings": TabManager.addTab(Config.config);
     }
