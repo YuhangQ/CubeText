@@ -74,8 +74,7 @@ class MyTab {
     public getID() {
         return this.tab.id;
     }
-    public close() {
-        //alert(this.saved);
+    public close(func: Function = null) {
         if(this.isUntitled() && !this.saved) {
             let promise = remote.dialog.showMessageBox(remote.getCurrentWindow(), {
                 type: "question",
@@ -97,14 +96,14 @@ class MyTab {
             return;
         }
 
-        FileHandler.autoSaveFunc();
-
-        if(this.getFilePath() == Config.config) {
-            Config.reload();
-        }
-
-        this.tab.close();
-        TabManager.remove(this);
+        FileHandler.saveFile(this, ()=>{
+            if(this.getFilePath() == Config.config) {
+                Config.reload();
+            }
+            this.tab.close();
+            TabManager.remove(this);
+            if(func) func();
+        });
     }
     public isUntitled() {
         return this.file == "Untitled";

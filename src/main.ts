@@ -4,6 +4,7 @@ import { Console } from "./models/Console";
 import * as path from "path";
 
 let mainWindow: BrowserWindow;
+let saved: Boolean = false;
 
 app.setName("cubetext");
 
@@ -19,6 +20,12 @@ function createWindow() {
     //mainWindow.webContents.openDevTools();
     AppMenu.createMenu();
     mainWindow.show();
+
+    mainWindow.on("close", (event)=> {
+        if(saved) return;
+        event.preventDefault();
+        mainWindow.webContents.send("close-save-all");
+    })
 }
 
 app.on("ready", createWindow);
@@ -45,6 +52,11 @@ ipcMain.on('devtools', (event) => {
 
 ipcMain.on('drag', (event, file) => {
     mainWindow.webContents.send("drag", file);
+})
+
+ipcMain.on('close-save-all', (event, file) => {
+    saved = true;
+    mainWindow.close();
 })
 
 export { mainWindow };

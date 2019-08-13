@@ -35,15 +35,19 @@ class FileHandler {
         fs.unlinkSync(path);
     }
 
-    static saveFile(tab: MyTab) {
-        if(tab.isUntitled()) return;
+    static saveFile(tab: MyTab, func: Function = null) {
+        if(tab.isUntitled()) {
+            if(func) func();
+            return;
+        }
         let webview = tab.getWebView();
         webview.addEventListener("ipc-message", (event)=>{
             if(event.channel != "content") return;
             this.saveText(tab.getFilePath(), event.args[0]);
+            tab.saved = true;
+            if(func) func();
         });
         webview.send("get");
-        tab.saved = true;
     }
 
     static openFile() {
@@ -57,11 +61,11 @@ class FileHandler {
         }
     }
 
-    static autoSaveFunc() {
+    static autoSaveFunc(func: Function = null) {
         let tabs = TabManager.getTabs();
         for(let tab of tabs) {
             if(!tab.saved) {
-                FileHandler.saveFile(tab);
+                FileHandler.saveFile(tab, func);
             }
         }
     }

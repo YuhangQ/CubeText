@@ -12,7 +12,7 @@ TabManager.init();
 Utils.init();
 TabManager.addTab("Untitled");
 
-FileHandler.autoSave();
+//FileHandler.autoSave();
 
 
 ipcRenderer.on("action", (event, arg) => {
@@ -68,4 +68,17 @@ ipcRenderer.on("drag", (event, arg) => {
 
 ipcRenderer.on("drag", (event, file) => {
     TabManager.addTab(file);
+});
+
+ipcRenderer.on("close-save-all", (event) => {
+    let tabs = TabManager.getTabs();
+    let cnt = 0;
+    for(let tab of tabs) {
+        tab.close(()=>{
+            cnt++;
+            if(cnt == tabs.length) {
+                ipcRenderer.send("close-save-all");
+            }
+        });
+    }
 });
