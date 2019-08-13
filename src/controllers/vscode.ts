@@ -1,8 +1,9 @@
 /// <reference path="../../node_modules/monaco-editor/monaco.d.ts" />
-import { remote, ipcRenderer } from "electron";
+import { remote, ipcRenderer, ipcMain } from "electron";
 import { Console } from "../models/Console";
 import { SSL_OP_CRYPTOPRO_TLSEXT_BUG } from "constants";
 import { Config } from "../models/Config";
+import { TabManager } from "../models/TabManager";
 
 declare var amdRequire;
 var editor: monaco.editor.IStandaloneCodeEditor;
@@ -189,3 +190,20 @@ ipcRenderer.on("font-size", (event, size)=> {
     input.updateOptions({fontSize: size});
     output.updateOptions({fontSize: size});
 });
+
+var holder = document.getElementById('drag');
+holder.ondragover = function () {
+    return false;
+};
+holder.ondragleave = holder.ondragend = function () {
+    return false;
+};
+
+holder.ondrop = function (e) {
+    e.preventDefault();
+    for(let i=0; i<e.dataTransfer.files.length; i++) {
+        let file = e.dataTransfer.files[i];
+        ipcRenderer.send("drag", file.path);
+    }
+    return false;
+};

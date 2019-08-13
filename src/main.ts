@@ -1,6 +1,7 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, nativeImage } from "electron";
 import * as AppMenu from "./models/AppMenu";
 import { Console } from "./models/Console";
+import * as path from "path";
 
 let mainWindow: BrowserWindow;
 
@@ -33,15 +34,17 @@ app.on('activate', function () {
 
 ipcMain.on('datapath', (event) => {
     event.returnValue = app.getPath("appData");
-}) 
+})
 ipcMain.on('devtools', (event) => {
-    if(mainWindow.webContents.isDevToolsOpened()) {
+    if (mainWindow.webContents.isDevToolsOpened()) {
         mainWindow.webContents.closeDevTools();
     } else {
         mainWindow.webContents.openDevTools();
     }
-}) 
+})
 
-
+ipcMain.on('drag', (event, file) => {
+    mainWindow.webContents.send("drag", file);
+})
 
 export { mainWindow };
