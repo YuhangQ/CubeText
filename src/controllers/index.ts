@@ -8,7 +8,7 @@ import { Utils } from "../models/Utils";
 Config.init();
 TabManager.init();
 Utils.init();
-TabManager.addTab("/Users/YuhangQ/Desktop/demo.cpp");
+TabManager.addTab("Untitled");
 
 FileHandler.autoSave();
 
@@ -16,7 +16,6 @@ document.getElementById('drag').ondragstart = (event) => {
     event.preventDefault()
     ipcRenderer.send('ondragstart', '/path/to/item')
 }
-
 
 ipcRenderer.on("action", (event, arg) => {
     switch (arg) {

@@ -21,35 +21,7 @@ class MyTab {
 
         this.file = file;
 
-        switch(path.extname(this.file)) {
-            // C
-            case ".c": this.fileTypeName = "C"; this.fileType = "c"; break;
-            case ".h": this.fileTypeName = "C++"; this.fileType = "cpp"; break;
-            // C++
-            case ".cpp": this.fileTypeName = "C++"; this.fileType = "cpp"; break;
-            case ".cc": this.fileTypeName = "C++"; this.fileType = "cpp"; break;
-            // bat
-            case ".cmd": this.fileTypeName = "Batch"; this.fileType = "bat"; break;
-            case ".bat": this.fileTypeName = "Batch"; this.fileType = "bat"; break;
-            // web
-            case ".css": this.fileTypeName = "CSS"; this.fileType = "css"; break;
-            case ".html": this.fileTypeName = "HTML"; this.fileType = "html"; break;
-            case ".js": this.fileTypeName = "JavaScript"; this.fileType = "javascript"; break;
-            // Golang
-            case ".go": this.fileTypeName = "Go"; this.fileType = "go"; break;
-            // Python
-            case ".py": this.fileTypeName = "Python"; this.fileType = "python"; break;
-            case ".json": this.fileTypeName = "JSON"; this.fileType = "json"; break;
-            case ".java": this.fileTypeName = "Java"; this.fileType = "java"; break;
-            case ".markdown": this.fileTypeName = "Markdown"; this.fileType = "markdown"; break;
-            case ".php": this.fileTypeName = "PHP"; this.fileType = "php"; break;
-            case ".ts": this.fileTypeName = "TypeScript"; this.fileType = "typescript"; break;
-            case ".sh": this.fileTypeName = "Shell"; this.fileType = "shell"; break;
-            case ".yml": this.fileTypeName = "YAML"; this.fileType = "yaml"; break;
-            case ".yaml": this.fileTypeName = "YAML"; this.fileType = "yaml"; break;
-            case ".xml": this.fileTypeName = "XML"; this.fileType = "xml"; break;
-            default: this.fileTypeName = "Plain"; this.fileType = "plaintext";
-        }
+        this.updateFileType();
 
         this.tab = TabManager.tabGroup.addTab({
             title: Utils.getFileNameByPath(this.file),
@@ -103,29 +75,34 @@ class MyTab {
         return this.tab.id;
     }
     public close() {
-        if(this.isUntitled()) {
-            remote.dialog.showMessageBox(remote.getCurrentWindow(), {
+        //alert(this.saved);
+        if(this.isUntitled() && !this.saved) {
+            let promise = remote.dialog.showMessageBox(remote.getCurrentWindow(), {
                 type: "question",
-                message: "文件尚未保存，是否保存",
-                detail: "如果选择否文件将不会保存，所做的更改无效。",
-                buttons: [
-                    "否", "是"
-                ],
-                defaultId: 0
-            }, (id: any) => {
-                if(id) {
-                    FileHandler.saveAs(this);
-                } else {
-                    this.tab.close();
-                    TabManager.remove(this);
-                }
+                message: "是否要保存对未命名文件的更改?",
+                detail: "选择不保存，已经存在的更改将不复存在。",
+                buttons: ["不保存", "返回", "保存"],
+                defaultId: 2
             });
+            // 不保存
+            if(promise == 0) {
+                this.tab.close();
+                TabManager.remove(this); 
+            }
+            // 保存
+            if(promise == 2) {
+                FileHandler.saveAs(this);
+            }
+            // 默认返回
             return;
         }
+
         FileHandler.autoSaveFunc();
+
         if(this.getFilePath() == Config.config) {
             Config.reload();
         }
+
         this.tab.close();
         TabManager.remove(this);
     }
@@ -135,6 +112,39 @@ class MyTab {
     public setFilePath(file: string) {
         this.file = file;
         this.updateTitle();
+        this.updateFileType();
+        this.webview.send("fileType", this.fileType, this.fileTypeName);
+    }
+    public updateFileType() {
+        switch(path.extname(this.file)) {
+            // C
+            case ".c": this.fileTypeName = "C"; this.fileType = "c"; break;
+            case ".h": this.fileTypeName = "C++"; this.fileType = "cpp"; break;
+            // C++
+            case ".cpp": this.fileTypeName = "C++"; this.fileType = "cpp"; break;
+            case ".cc": this.fileTypeName = "C++"; this.fileType = "cpp"; break;
+            // bat
+            case ".cmd": this.fileTypeName = "Batch"; this.fileType = "bat"; break;
+            case ".bat": this.fileTypeName = "Batch"; this.fileType = "bat"; break;
+            // web
+            case ".css": this.fileTypeName = "CSS"; this.fileType = "css"; break;
+            case ".html": this.fileTypeName = "HTML"; this.fileType = "html"; break;
+            case ".js": this.fileTypeName = "JavaScript"; this.fileType = "javascript"; break;
+            // Golang
+            case ".go": this.fileTypeName = "Go"; this.fileType = "go"; break;
+            // Python
+            case ".py": this.fileTypeName = "Python"; this.fileType = "python"; break;
+            case ".json": this.fileTypeName = "JSON"; this.fileType = "json"; break;
+            case ".java": this.fileTypeName = "Java"; this.fileType = "java"; break;
+            case ".markdown": this.fileTypeName = "Markdown"; this.fileType = "markdown"; break;
+            case ".php": this.fileTypeName = "PHP"; this.fileType = "php"; break;
+            case ".ts": this.fileTypeName = "TypeScript"; this.fileType = "typescript"; break;
+            case ".sh": this.fileTypeName = "Shell"; this.fileType = "shell"; break;
+            case ".yml": this.fileTypeName = "YAML"; this.fileType = "yaml"; break;
+            case ".yaml": this.fileTypeName = "YAML"; this.fileType = "yaml"; break;
+            case ".xml": this.fileTypeName = "XML"; this.fileType = "xml"; break;
+            default: this.fileTypeName = "Text"; this.fileType = "plaintext";
+        }
     }
     public getFilePath() {
         return this.file;

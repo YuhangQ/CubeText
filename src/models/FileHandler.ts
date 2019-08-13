@@ -43,6 +43,7 @@ class FileHandler {
             this.saveText(tab.getFilePath(), event.args[0]);
         });
         webview.send("get");
+        tab.saved = true;
     }
 
     static openFile() {
@@ -61,7 +62,6 @@ class FileHandler {
         for(let tab of tabs) {
             if(!tab.saved) {
                 FileHandler.saveFile(tab);
-                tab.saved = true;
             }
         }
     }

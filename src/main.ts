@@ -8,6 +8,9 @@ app.setName("cubetext");
 
 function createWindow() {
     mainWindow = new BrowserWindow({
+        webPreferences: {
+            nodeIntegration: true
+        },
         width: 800,
         height: 600
     });

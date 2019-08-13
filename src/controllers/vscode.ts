@@ -151,23 +151,29 @@ let text = document.getElementById("run-info");
 let kill = document.getElementById("kill");
 ipcRenderer.on("waiting", (event, message)=> {
     text.innerText = message;
-    icon.setAttribute("src" ,"../styles/hourglass.svg");
+    icon.setAttribute("src" ,"../static/icons/waiting.svg");
     kill.hidden = !(message == "正在运行...");
 });
 ipcRenderer.on("warning", (event, message)=> {
     text.innerText = message;
-    icon.setAttribute("src" ,"../styles/warning.svg");
+    icon.setAttribute("src" ,"../static/icons/warning.svg");
     kill.hidden = true;
 });
 ipcRenderer.on("error", (event, message)=> {
     text.innerText = message;
-    icon.setAttribute("src" ,"../styles/cancel.svg");
+    icon.setAttribute("src" ,"../static/icons/error.svg");
     kill.hidden = true;
 });
 ipcRenderer.on("success", (event, message)=> {
     text.innerText = message;
-    icon.setAttribute("src" ,"../styles/checked.svg");
+    icon.setAttribute("src" ,"../static/icons/success.svg");
     kill.hidden = true;
+});
+
+ipcRenderer.on("fileType", (event, fileType, fileTypeName)=> {
+    let model = editor.getModel();
+    monaco.editor.setModelLanguage(model, fileType);
+    document.getElementById("lang").innerHTML = "&nbsp;" + fileTypeName + "&nbsp;";
 });
 
 ipcRenderer.on("ifkill", (event, time)=>{

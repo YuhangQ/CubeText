@@ -15,22 +15,16 @@
   "author": "YuhangQ",
   "license": "ISC",
   "dependencies": {
-    "@types/draggabilly": "^2.1.1",
     "@types/dragula": "^2.1.34",
-    "ajv": "^6.10.2",
-    "ajv-keywords": "^3.4.1",
     "app-builder-lib": "^21.2.0",
     "dragula": "^3.7.2",
-    "electron-builder-squirrel-windows": "^21.2.0",
     "electron-tabs": "^0.9.5",
-    "iconv-lite": "^0.5.0",
     "monaco-editor": "^0.15.6",
-    "node-pty": "^0.8.1",
-    "xterm": "^3.14.0"
+    "electron": "4.0.1",
+    "node-pty": "^0.8.0"
   },
   "devDependencies": {
     "@types/node": "^10.12.18",
-    "electron": "4.0.1",
     "electron-builder": "^21.1.5"
   },
   "build": {
