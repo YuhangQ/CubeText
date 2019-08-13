@@ -81,6 +81,7 @@ class Console {
             return;
         }
         tab.runing = true;
+        FileHandler.autoSaveFunc();
 
         this.show();
         
