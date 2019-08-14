@@ -12,7 +12,7 @@ class FileHandler {
 
     static saveAs(tab: MyTab) {
         FileHandler.autoSaveFunc();
-        const file = remote.dialog.showSaveDialog( {
+        const file = remote.dialog.showSaveDialog({
             filters: [
                 { name: "C/C++ Files", extensions: ['cpp', 'c'] },
                 { name: "Text Files", extensions: ['in', 'out', 'ans', 'txt'] },
@@ -23,8 +23,8 @@ class FileHandler {
     }
 
     static queryPath(tab: MyTab) {
-        if(!tab.isUntitled()) return;
-        const file = remote.dialog.showSaveDialog( {
+        if (!tab.isUntitled()) return;
+        const file = remote.dialog.showSaveDialog({
             filters: [
                 { name: 'All Files', extensions: ['*'] }],
         });
@@ -36,18 +36,18 @@ class FileHandler {
     }
 
     static saveFile(tab: MyTab, func: Function = null) {
-        if(tab.isUntitled()) {
-            if(func) func();
+        if (tab.isUntitled()) {
+            if (func) func();
             return;
         }
         let webview = tab.getWebView();
-        webview.addEventListener("ipc-message", (event)=>{
-            if(event.channel != "content") return;
+        webview.addEventListener("ipc-message", (event) => {
+            if (event.channel != "content") return;
             this.saveText(tab.getFilePath(), event.args[0]);
             tab.saved = true;
-            if(func) func();
+            try{if (func) func();}catch(e){}
         });
-        webview.send("get");
+        try{webview.send("get");}catch(e){if (func) func();}
     }
 
     static openFile() {
@@ -56,15 +56,15 @@ class FileHandler {
                 { name: 'All Files', extensions: ['*'] }],
             properties: ['openFile']
         });
-        if(files) {
+        if (files) {
             TabManager.addTab(files[0]);
         }
     }
 
     static autoSaveFunc(func: Function = null) {
         let tabs = TabManager.getTabs();
-        for(let tab of tabs) {
-            if(!tab.saved) {
+        for (let tab of tabs) {
+            if (!tab.saved) {
                 FileHandler.saveFile(tab, func);
             }
         }
@@ -77,7 +77,7 @@ class FileHandler {
     static saveText(file: string, content: string) {
         fs.writeFileSync(file, content);
     }
- 
+
     static readText(file: string): string {
         return fs.readFileSync(file, 'utf8');
     }

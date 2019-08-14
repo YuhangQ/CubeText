@@ -16,6 +16,7 @@ class MyTab {
     public runing: boolean = false;
     public fileType: string;
     public fileTypeName: string;
+    private ready: boolean = false;
     private pty;
     constructor(file: string) {
 
@@ -46,26 +47,29 @@ class MyTab {
             //this.webview.openDevTools();
         });
         this.webview.addEventListener("ipc-message", (event) => {
-            if(event.channel == "editor-loading") {
+            if (event.channel == "editor-loading") {
                 let content: string;
-                if(this.file != "Untitled") content = FileHandler.readText(this.file);
+                if (this.file != "Untitled") content = FileHandler.readText(this.file);
                 else content = "";
                 this.webview.send("set", content, this.fileType, this.fileTypeName, Config.getFontSize());
             }
-            if(event.channel == "cprun") {
-                if(!this.runing) this.pty = Console.cprun(this, event.args[0]);
+            if (event.channel == "ready") {
+                this.ready = true;
             }
-            if(event.channel == "kill") {
+            if (event.channel == "cprun") {
+                if (!this.runing) this.pty = Console.cprun(this, event.args[0]);
+            }
+            if (event.channel == "kill") {
                 this.pty.kill();
                 this.getWebView().send("ifkill");
                 this.runing = false;
             }
-            if(event.channel == "outlimit") {
+            if (event.channel == "outlimit") {
                 this.pty.kill();
                 this.getWebView().send("outlimit");
                 this.runing = false;
             }
-            if(event.channel == 'text-change') {
+            if (event.channel == 'text-change') {
                 this.saved = false;
             }
         });
@@ -75,7 +79,8 @@ class MyTab {
         return this.tab.id;
     }
     public close(func: Function = null) {
-        if(this.isUntitled() && !this.saved) {
+        if(!this.ready) return;
+        if (this.isUntitled() && !this.saved) {
             let promise = remote.dialog.showMessageBox(remote.getCurrentWindow(), {
                 type: "question",
                 message: "是否要保存对未命名文件的更改?",
@@ -84,25 +89,24 @@ class MyTab {
                 defaultId: 2
             });
             // 不保存
-            if(promise == 0) {
+            if (promise == 0) {
                 this.tab.close();
-                TabManager.remove(this); 
+                TabManager.remove(this);
             }
             // 保存
-            if(promise == 2) {
+            if (promise == 2) {
                 FileHandler.saveAs(this);
             }
             // 默认返回
             return;
         }
-
-        FileHandler.saveFile(this, ()=>{
-            if(this.getFilePath() == Config.config) {
+        TabManager.remove(this);
+        FileHandler.saveFile(this, () => {
+            if (this.getFilePath() == Config.config) {
                 Config.reload();
             }
             this.tab.close();
-            TabManager.remove(this);
-            if(func) func();
+            try{if (func) func();}catch(e){}
         });
     }
     public isUntitled() {
@@ -115,7 +119,7 @@ class MyTab {
         this.webview.send("fileType", this.fileType, this.fileTypeName);
     }
     public updateFileType() {
-        switch(path.extname(this.file)) {
+        switch (path.extname(this.file)) {
             // C
             case ".c": this.fileTypeName = "C"; this.fileType = "c"; break;
             case ".h": this.fileTypeName = "C++"; this.fileType = "cpp"; break;
@@ -148,6 +152,9 @@ class MyTab {
     public getFilePath() {
         return this.file;
     }
+    public activate() {
+        this.tab.activate();
+    }
     public updateTitle() {
         this.tab.setTitle(Utils.getFileNameByPath(this.file));
     }
@@ -161,9 +168,24 @@ class MyTab {
 
 class TabManager {
     public static tabGroup: TabGroup;
-    private static tabs:{[key:number] : MyTab} = {};
+    private static tabs: { [key: number]: MyTab } = {};
     static addTab(file: string) {
+
+        // 如果重复打开，则仅激活已存在的文件
+        for (let t of this.getTabs()) {
+            if (t.getFilePath() == file) {
+                t.activate();
+                return;
+            }
+        }
+
         let tab = new MyTab(file);
+
+        // 如果仅有一个未修改的 Untitled，则关闭它
+        if (this.getTabs().length == 1 && this.getTabs()[0].isUntitled() && this.getTabs()[0].saved) {
+            this.getTabs()[0].close();
+        }
+
         this.tabs[tab.getID()] = tab;
     }
     static getTabs() {
@@ -175,11 +197,12 @@ class TabManager {
     }
     static setFontSize(size: number) {
         let tabs = this.getTabs();
-        for(let tab of tabs) {
+        for (let tab of tabs) {
             tab.getWebView().send("font-size", size);
         }
     }
     static remove(tab: MyTab) {
+        //alert("触发删除");
         delete this.tabs[tab.getID()];
     }
     static getCurrentTab() {
@@ -196,11 +219,11 @@ class TabManager {
             }
         });
         // 防止所有标签页被关闭
-         this.tabGroup.on("tab-removed", (tab, tabGroup) => {
-             if(this.tabGroup.getTabs().length == 0) {
-                 TabManager.addTab("Untitled");
-             }
-         });
+        this.tabGroup.on("tab-removed", (tab, tabGroup) => {
+            if (this.tabGroup.getTabs().length == 0) {
+                TabManager.addTab("Untitled");
+            }
+        });
     }
 }
 

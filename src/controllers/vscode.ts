@@ -58,6 +58,7 @@ ipcRenderer.on("set", (event, content, lang, langName, fontSize) => {
     editor.updateOptions({fontSize: fontSize});
     input.updateOptions({fontSize: fontSize});
     output.updateOptions({fontSize: fontSize});
+    ipcRenderer.sendToHost("ready");
 });
 
 
