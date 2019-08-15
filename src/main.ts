@@ -17,7 +17,7 @@ function createWindow() {
         height: 600
     });
     mainWindow.loadURL(`file://${__dirname}/../views/index.html`);
-    //mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
     AppMenu.createMenu();
     mainWindow.show();
 

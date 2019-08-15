@@ -41,7 +41,7 @@ class Config {
     }
     static reload() {
         let contents = FileHandler.readText(Config.config);
-        this.conf = JSON.parse(contents);
+        this.conf = JSON.parse(contents.toString("utf8"));
     }
     static getFontSize(): number {
         return this.conf.fontSize;

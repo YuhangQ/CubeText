@@ -2,8 +2,10 @@ import * as fs from "fs";
 import { TabManager } from "./TabManager";
 import { remote } from "electron";
 import { Utils } from "./Utils";
-import { MyTab } from "./TabManager";
+import { MyTab } from "./MyTab";
 import { Config } from "./Config";
+import * as iconv from "iconv-lite";
+import { stringify } from "querystring";
 
 class FileHandler {
     static newFile() {
@@ -43,11 +45,12 @@ class FileHandler {
         let webview = tab.getWebView();
         webview.addEventListener("ipc-message", (event) => {
             if (event.channel != "content") return;
-            this.saveText(tab.getFilePath(), event.args[0]);
+            this.saveText(tab.getFilePath(), tab.encoding == "GBK" ? this.getGBKContent(event.args[0]): event.args[0]);
             tab.saved = true;
-            try{if (func) func();}catch(e){}
+            if (func) func();
         });
-        try{webview.send("get");}catch(e){if (func) func();}
+        webview.send("get");
+        if (func) func();
     }
 
     static openFile() {
@@ -75,11 +78,27 @@ class FileHandler {
     }
 
     static saveText(file: string, content: string) {
+        //alert(content);
         fs.writeFileSync(file, content);
     }
 
-    static readText(file: string): string {
-        return fs.readFileSync(file, 'utf8');
+    static readText(file: string): Buffer {
+        return fs.readFileSync(file);
+    }
+
+    static getEncoding(buffer: Buffer): string {
+        let text = this.getTextFromBuffer(buffer, "UTF-8");
+        if(text.search("�") != -1) return "GBK";
+        return "UTF-8";
+    }
+
+    static getTextFromBuffer(buffer: Buffer, encoding: string): string {
+        //alert(encoding + ":" + iconv.decode(buffer, encoding));
+        return iconv.decode(buffer, encoding);
+    }
+
+    static getGBKContent(text: string): string {
+        return text;
     }
 
 }

@@ -1,7 +1,6 @@
 /// <reference path="../../node_modules/monaco-editor/monaco.d.ts" />
 import { remote, ipcRenderer, ipcMain } from "electron";
 import { Console } from "../models/Console";
-import { SSL_OP_CRYPTOPRO_TLSEXT_BUG } from "constants";
 import { Config } from "../models/Config";
 import { TabManager } from "../models/TabManager";
 
@@ -58,7 +57,6 @@ ipcRenderer.on("set", (event, content, lang, langName, fontSize) => {
     editor.updateOptions({fontSize: fontSize});
     input.updateOptions({fontSize: fontSize});
     output.updateOptions({fontSize: fontSize});
-    ipcRenderer.sendToHost("ready");
 });
 
 
@@ -176,6 +174,10 @@ ipcRenderer.on("fileType", (event, fileType, fileTypeName)=> {
     let model = editor.getModel();
     monaco.editor.setModelLanguage(model, fileType);
     document.getElementById("lang").innerHTML = "&nbsp;" + fileTypeName + "&nbsp;";
+});
+
+ipcRenderer.on("encoding", (event, encoding: string)=> {
+    document.getElementById("encoding").innerHTML = "&nbsp;" + encoding + "&nbsp;";
 });
 
 ipcRenderer.on("ifkill", (event, time)=>{

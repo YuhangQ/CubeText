@@ -1,4 +1,5 @@
-import { TabManager, MyTab } from "./TabManager";
+import { TabManager } from "./TabManager";
+import { MyTab } from "./MyTab";
 import * as pty from "node-pty";
 import { FileHandler } from "./FileHandler";
 import { app, ipcRenderer } from "electron";
@@ -106,9 +107,10 @@ class Console {
             tab.getWebView().send("flashOutput");
             await Console.sleep(50);
             tab.getWebView().send("ifkill");
-            FileHandler.removeFile(path.join(Config.cacheDir, tab.getID() + ".exe"));
+            FileHandler.removeFile(path.join(Config.cacheDir, tab.getID() + (Utils.isWindows() ? ".exe" : "")));
             FileHandler.removeFile(path.join(Config.cacheDir, tab.getID() + ".in"));
         });
+        
         ptyProcess.on('data', async function (data) {
             data = data.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
             data = Utils.removeShellChar(data);

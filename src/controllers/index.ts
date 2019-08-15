@@ -21,7 +21,7 @@ ipcRenderer.on("action", (event, arg) => {
         case "save": FileHandler.queryPath(TabManager.getCurrentTab()); break;
         case "saveas": FileHandler.saveAs(TabManager.getCurrentTab()); break;
         case "console": Console.use(); break;
-        case "closetag": TabManager.getCurrentTab().close(); break;
+        case "closetag": TabManager.getCurrentTab().close(null); break;
         case "compile": Console.compile(TabManager.getCurrentTab()); break;
         case "cprun": TabManager.getCurrentTab().getWebView().send("cprun"); break;
         case "font-larger": TabManager.getCurrentTab().getWebView().send("font-larger"); Config.setFontSize(Config.getFontSize() + 1); break;
@@ -55,7 +55,6 @@ ipcRenderer.on("drag", (event, file) => {
 ipcRenderer.on("close-save-all", (event) => {
     let tabs = TabManager.getTabs();
     let cnt = 0;
-    //alert("当前有" + tabs.length + "个");
     for(let tab of tabs) {
         tab.close(()=>{
             cnt++;
