@@ -6,7 +6,7 @@ import * as path from "path";
 let mainWindow: BrowserWindow;
 let saved: Boolean = false;
 
-app.setName("cubetext");
+app.setName("CubeText 内测版 QQ群:688453192");
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -17,7 +17,7 @@ function createWindow() {
         height: 600
     });
     mainWindow.loadURL(`file://${__dirname}/../views/index.html`);
-    mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
     AppMenu.createMenu();
     mainWindow.show();
 
