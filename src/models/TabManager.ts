@@ -9,7 +9,7 @@ class TabManager {
 
         // 如果重复打开，则仅激活已存在的文件
         for (let t of this.getTabs()) {
-            if (t.getFilePath() == file) {
+            if (!t.isUntitled() && t.getFilePath() == file) {
                 t.activate();
                 return;
             }
@@ -18,7 +18,7 @@ class TabManager {
         let tab = new MyTab(file);
 
         // 如果仅有一个未修改的 Untitled，则关闭它
-        if (this.getTabs().length == 1 && this.getTabs()[0].isUntitled() && this.getTabs()[0].saved) {
+        if (this.getTabs().length == 1 && this.getTabs()[0].isUntitled() && this.getTabs()[0].saved && !tab.isUntitled()) {
             this.getTabs()[0].close(null);
         }
 

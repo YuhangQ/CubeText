@@ -65,7 +65,7 @@ class Console {
             if(data.indexOf("compile_error") != -1) {
                 tab.getWebView().send("warning", "编译失败.");
                 Console.show();
-                output = Utils.encode(output).replace("#compile_error" + Utils.linefeed, "").replace("#compile_error", "");
+                output = Utils.encode(output).replace("#compile_error\n", "").replace("#compile_error", "");
                 tab.getWebView().send("output", output);
                 return;
             }
@@ -117,15 +117,15 @@ class Console {
             if(data.indexOf("#compile_success") != -1) {
                 time = Date.now();
                 tab.getWebView().send("waiting", "正在运行...");
-                data = data.replace("#compile_success"+Utils.linefeed, ""); 
+                data = data.replace("#compile_success\n", ""); 
             }
             if(data.indexOf("#compile_error") != -1) {
                 tab.getWebView().send("warning", "编译失败.");
-                data = data.replace("#compile_error"+Utils.linefeed, "");
+                data = data.replace("#compile_error\n", "");
             }
             if(data.indexOf("#run_error") != -1) {
                 tab.getWebView().send("error", "运行时异常.");
-                data = data.replace(Utils.linefeed+"#run_error", "").replace("#run_error"+Utils.linefeed, "").replace("#run_error", "");
+                data = data.replace("\n#run_error", "").replace("#run_error\n", "").replace("#run_error", "");
             }
             if(data.indexOf("#run_success") != -1) {
                 let now = Date.now();

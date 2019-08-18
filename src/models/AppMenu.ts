@@ -146,7 +146,7 @@ function createMenu() {
         // Window menu
         template[3].submenu = [{ label: "关闭", role: "close" }, { label: "最小化", role: "minimize" }, { label: "缩放", role: "zoom" }, { type: "separator" }, { label: "全部置于顶层", role: "front" }];
     } else {
-        template[1].submenu.push(
+        template[0].submenu.push(
             { label: "设置", submenu: [
                 {
                     label: "设置",
