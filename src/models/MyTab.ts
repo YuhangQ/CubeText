@@ -43,7 +43,7 @@ class MyTab {
         this.webview.setAttribute("nodeintegration", null);
         // 开启 editor 的开发者工具
         this.webview.addEventListener("dom-ready", () => {
-            this.webview.openDevTools();
+            //this.webview.openDevTools();
         });
         this.webview.addEventListener("ipc-message", (event) => {
             if (event.channel == "editor-loading") {

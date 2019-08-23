@@ -37,6 +37,13 @@ class Config {
 
         Config.reload();
     }
+    static hasCompileScript(filetype: string) {
+        return fs.existsSync(path.join(this.scriptsDir, `${filetype}_compile` + Utils.isWindows() ? ".bat" : ".sh"));
+    }
+    static hasRunScript(filetype: string) {
+        return fs.existsSync(path.join(this.scriptsDir, `${filetype}_compile_run` + Utils.isWindows() ? ".bat" : ".sh"));
+    }
+
     static reload() {
         let contents = FileHandler.readText(Config.config);
         this.conf = JSON.parse(contents.toString("utf8"));
