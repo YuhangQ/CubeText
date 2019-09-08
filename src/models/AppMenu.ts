@@ -89,6 +89,23 @@ function createMenu() {
             }
         ]
     });
+    template.push({
+        label: "代码段",
+        submenu: [
+            { 
+                label: "新建代码段",
+                click() { mainWindow.webContents.send("action", "newSnippets"); },
+            },
+            {
+                label: "查看所有代码段",
+                click() { mainWindow.webContents.send("action", "cprun"); },
+            },
+            {
+                label: "代码段帮助",
+                click() { mainWindow.webContents.send("action", "devtools"); },
+            }
+        ]
+    });
     // Help menu
     template.push({
         label: "帮助",

@@ -1,5 +1,6 @@
 import * as iconv from "iconv-lite";
 import * as os from "os";
+import * as fs from "fs";
 
 class Utils {
     /**
@@ -48,6 +49,11 @@ class Utils {
             return str;
         } else {
             return s;
+        }
+    }
+    static makeFileIfnotExsits(file: string) {
+        if(!fs.existsSync(file)) {
+            fs.writeFileSync(file, "");
         }
     }
     static isWindows() {

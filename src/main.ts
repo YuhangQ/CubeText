@@ -4,6 +4,7 @@ import { Console } from "./models/Console";
 import * as path from "path";
 
 let mainWindow: BrowserWindow;
+let snippetWindow: BrowserWindow;
 let saved: Boolean = false;
 
 app.setName("CubeText 内测版 QQ群:688453192");
@@ -52,11 +53,32 @@ ipcMain.on('devtools', (event) => {
 
 ipcMain.on('drag', (event, file) => {
     mainWindow.webContents.send("drag", file);
+});
+
+ipcMain.on("snippets", (event) => {
+    if(snippetWindow != null) return;
+    snippetWindow = new BrowserWindow({
+        webPreferences: {
+            nodeIntegration: true
+        },
+        width: 400,
+        height: 100,
+        //resizable: false,
+        parent: mainWindow
+    });
+    snippetWindow.loadURL(`file://${__dirname}/../views/snippets.html`);
+    //snippetWindow.webContents.openDevTools();
+    snippetWindow.show();
+});
+
+ipcMain.on("newSnippet", (event, name)=>{
+    mainWindow.webContents.send("newSnippet", name);
+    snippetWindow.close();
 })
 
 ipcMain.on('close-save-all', (event, file) => {
     saved = true;
     mainWindow.close();
-})
+});
 
 export { mainWindow };

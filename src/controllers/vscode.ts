@@ -3,11 +3,15 @@ import { remote, ipcRenderer, ipcMain } from "electron";
 import { Console } from "../models/Console";
 import { Config } from "../models/Config";
 import { TabManager } from "../models/TabManager";
+import { FileHandler } from "../models/FileHandler";
+import * as path from "path";
 
 declare var amdRequire;
 var editor: monaco.editor.IStandaloneCodeEditor;
 var input: monaco.editor.IStandaloneCodeEditor;
 var output: monaco.editor.IStandaloneCodeEditor;
+
+Config.init();
 
 amdRequire(['vs/editor/editor.main'], () => {
     ipcRenderer.sendToHost("editor-loading");
@@ -29,6 +33,29 @@ ipcRenderer.on("set", (event, content, lang, langName, fontSize) => {
     });
     editor.onDidChangeModelContent(()=>{
         ipcRenderer.sendToHost("text-change");
+    });
+
+    editor.onKeyUp((e)=>{
+        if(e.code != "Tab") return;
+        let pos = editor.getPosition();
+        let line = editor.getModel().getValueInRange(new monaco.Range(pos.lineNumber, 1, pos.lineNumber, pos.column));
+        let spaceNum = 0;
+        for(let i=line.length-1; i>=0; i--) {
+            if(line[i] == " ") spaceNum++;
+            else break;
+        }
+        line = line.slice(0, line.length-spaceNum);
+        
+        let names = Config.getSnippetsList();
+        for(let name of names) {
+            if(!line.endsWith(name)) continue;
+            var range = new monaco.Range(pos.lineNumber, pos.column-spaceNum-name.length, pos.lineNumber, pos.column);
+            var id = { major: 1, minor: 1 };
+            var text = FileHandler.readText(path.join(Config.snippetsDir, name + ".snippet")).toString("utf-8");
+            var op = {identifier: id, range: range, text: text, forceMoveMarkers: true};
+            editor.executeEdits("my-source", [op]);
+            break;
+        }
     });
 
     input = monaco.editor.create(document.getElementById('input'), {
